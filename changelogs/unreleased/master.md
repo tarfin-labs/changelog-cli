@@ -1,12 +1,7 @@
 ---
 author: Faruk Can
-date: 2020-01-31 07:37:31
+date: 2020-02-07 12:25:17
 ---
 
-### Added
-- Master New Feature added.
-- Master Old Feature added also.
-
-### Deprecated
-- New feature deprecated.
-- Old feature deprecated also.
+### Fixed
+- Logo status changed to false because of php7.4 mismatch.
