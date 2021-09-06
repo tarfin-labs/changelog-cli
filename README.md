@@ -6,10 +6,10 @@
 
 ## Create a changelog file
 ```shell
-changelog-cli changelog:create
+changelog-cli create
 ```
 
 ## Publish changelog files
 ```shell
-changelog-cli changelog:publish
+changelog-cli publish
 ```
