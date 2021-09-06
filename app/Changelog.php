@@ -65,7 +65,7 @@ class Changelog
         return $this->unreleasedPath() . DIRECTORY_SEPARATOR . $this->branchName() . '.md';
     }
 
-    public function execute(int $option)
+    public function execute($option)
     {
         if (!Storage::exists($this->unreleasedPath())) {
             Storage::makeDirectory($this->unreleasedPath());
@@ -94,6 +94,8 @@ class Changelog
                 break;
             case self::SECURITY:
                 $content.= "### Security\n";
+                break;
+            default:
                 break;
         }
 

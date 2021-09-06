@@ -3,3 +3,5 @@
 /.vscode
 /.vagrant
 /builds
+.DS_Store
+.composer.lock

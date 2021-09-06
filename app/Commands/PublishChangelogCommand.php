@@ -14,7 +14,7 @@ class PublishChangelogCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'changelog:publish';
+    protected $signature = 'publish';
 
     /**
      * The description of the command.

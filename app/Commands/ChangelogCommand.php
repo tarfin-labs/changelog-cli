@@ -5,6 +5,7 @@ namespace App\Commands;
 use App\Changelog;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
+use PhpSchool\CliMenu\CliMenu;
 
 class ChangelogCommand extends Command
 {
@@ -13,7 +14,7 @@ class ChangelogCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'changelog:create';
+    protected $signature = 'create';
 
     /**
      * The description of the command.
@@ -28,15 +29,20 @@ class ChangelogCommand extends Command
      * @param Changelog $changelog
      * @return mixed
      */
-    public function handle(Changelog $changelog)
+    public function handle(Changelog $changelog): void
     {
         $option = $this->menu($changelog->menuName, $changelog->menuItems)
-            ->setForegroundColour('black')
+            ->setForegroundColour('green')
+            ->setBackgroundColour('black')
             ->open();
 
-        $changelog->execute($option);
-
-        $this->info("#{$changelog->menuItems[$option]} changelog file successfully created.");
+        if (is_null($option)) {
+            $this->info('Changelog closed!');
+        } else {
+            $changelog->execute($option);
+            $this->notify("Changelog Cli", "#{$changelog->menuItems[$option]} changelog file successfully created.");
+            $this->info("#{$changelog->menuItems[$option]} changelog file successfully created.");
+        }
     }
 
     /**
