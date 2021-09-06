@@ -4,4 +4,4 @@
 /.vagrant
 /builds
 .DS_Store
-.composer.lock
+composer.lock
