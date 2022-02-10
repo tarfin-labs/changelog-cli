@@ -5,7 +5,6 @@ namespace ChangelogCLI\Commands;
 use ChangelogCLI\Changelog;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
-use PhpSchool\CliMenu\CliMenu;
 
 class ChangelogCommand extends Command
 {
