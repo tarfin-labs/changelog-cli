@@ -1,20 +1,17 @@
 <?php
 
-
 namespace App;
 
-
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class Changelog
 {
-    const ADDED = 'New feature';
-    const FIXED = 'Bug fix';
-    const CHANGED = 'Feature change';
-    const DEPRECATED = 'New deprecation';
-    const REMOVED = 'Feature removal';
-    const SECURITY = 'Security fix';
+    public const ADDED = 'New feature';
+    public const FIXED = 'Bug fix';
+    public const CHANGED = 'Feature change';
+    public const DEPRECATED = 'New deprecation';
+    public const REMOVED = 'Feature removal';
+    public const SECURITY = 'Security fix';
 
     public $menuName = 'Changelog category';
 
@@ -27,7 +24,7 @@ class Changelog
         'Security fix',
     ];
 
-    public $categories = [
+    public array $categories = [
         'Added',
         'Changed',
         'Deprecated',
@@ -130,7 +127,7 @@ class Changelog
         return exec("ex -sc '{$lineNumber}i|{$text}' -cx {$file}");
     }
 
-    public function appendCategories()
+    public function appendCategories(): void
     {
         $line = $this->search('Unreleased', config('app.structure.main'));
 
@@ -152,7 +149,7 @@ class Changelog
      * @param $file
      * @return string|null
      */
-    public function getContent($start, $end, $file)
+    public function getContent($start, $end, $file): ?string
     {
         return shell_exec("cat {$file} | awk '/{$start}/{f=1;next} /{$end}/{f=0} f'");
     }
@@ -163,12 +160,12 @@ class Changelog
      * @param $file
      * @return string
      */
-    public function getAuthor($file)
+    public function getAuthor($file): string
     {
         return exec("grep 'author:' {$file} | sed 's/^.*: //' ");
     }
 
-    public function publishFileContent($file)
+    public function publishFileContent($file): void
     {
         $changelogFile = config('app.structure.main');
 
