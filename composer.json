@@ -27,12 +27,12 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app/"
+            "ChangelogCLI\\": "app/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "ChangelogCLI\\Tests\\": "tests/"
         }
     },
     "config": {

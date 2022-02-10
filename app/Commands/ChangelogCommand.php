@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Commands;
+namespace ChangelogCLI\Commands;
 
-use App\Changelog;
+use ChangelogCLI\Changelog;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 use PhpSchool\CliMenu\CliMenu;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Providers;
+namespace ChangelogCLI\Providers;
 
-use App\Changelog;
+use ChangelogCLI\Changelog;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
