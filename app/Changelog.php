@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace ChangelogCLI;
 
 use Illuminate\Support\Facades\Storage;
 
