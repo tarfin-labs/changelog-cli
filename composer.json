@@ -16,10 +16,7 @@
         }
     ],
     "require": {
-        "php": "^8.0",
-        "laminas/laminas-text": "^2.8",
-        "laravel-zero/framework": "^8.0",
-        "nunomaduro/laravel-console-menu": "^3.1"
+        "php": "^8.0 | ^8.1"
     },
     "require-dev": {
         "laminas/laminas-text": "^2.9",
@@ -50,5 +47,7 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "bin": ["changelog-cli"]
+    "bin": [
+        "builds/changelog-cli"
+    ]
 }
