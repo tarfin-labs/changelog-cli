@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.3.2] - 0.3.2
+- PHP 8.2 support added.
+
 ## [0.3.1] - 0.3.1
 - Fix namespacing issues
 
