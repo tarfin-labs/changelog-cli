@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Unit;
+namespace ChangelogCLI\Tests\Unit;
 
-use Tests\TestCase;
+use ChangelogCLI\Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
