@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace ChangelogCLI\Tests;
 
 use LaravelZero\Framework\Testing\TestCase as BaseTestCase;
 

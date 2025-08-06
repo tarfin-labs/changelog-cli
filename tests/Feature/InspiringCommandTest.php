@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Feature;
+namespace ChangelogCLI\Tests\Feature;
 
-use Tests\TestCase;
+use ChangelogCLI\Tests\TestCase;
 
 class InspiringCommandTest extends TestCase
 {
