@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [0.3.3] - 0.3.3
+## [0.4.0] - 0.4.0
 - PHP 8.3 and 8.4 support added.
 - PHPUnit 11 and 12 support added.
 - Laravel Zero upgraded to 12.0.
