@@ -37,7 +37,7 @@ class PublishChangelogCommand extends Command
         }
 
         foreach ($files as $file) {
-            $filePath = config('app.structure.unreleased') . DIRECTORY_SEPARATOR . $file->getFilename();
+            $filePath = config('app.structure.unreleased') . DIRECTORY_SEPARATOR . $file->getRelativePathname();
 
             $changelog->publishFileContent($filePath);
         }
