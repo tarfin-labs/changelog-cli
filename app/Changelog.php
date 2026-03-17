@@ -188,6 +188,7 @@ class Changelog
                 }
 
                 $newContent = implode("\n", $lines);
+                $newContent = str_replace("'", "\u{2019}", $newContent);
 
                 $this->writeAfterLine($newContent, $lineNumber, $changelogFile);
             }
