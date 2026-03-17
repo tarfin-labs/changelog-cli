@@ -183,7 +183,13 @@ class Changelog
 
                 foreach($lines as $lineNr => $line){
                     if ($line) {
-                        $lines[$lineNr] = trim($line,"\r") . " (" . $author . ")";
+                        $trimmed = trim($line, "\r");
+
+                        if ($trimmed !== '' && !preg_match('/^\s/', $trimmed) && !str_starts_with($trimmed, '- ')) {
+                            $trimmed = '- ' . $trimmed;
+                        }
+
+                        $lines[$lineNr] = $trimmed . " (" . $author . ")";
                     }
                 }
 
