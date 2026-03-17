@@ -187,6 +187,7 @@ class Changelog
                     }
                 }
 
+                $lines = array_filter($lines, fn ($line) => trim($line) !== '');
                 $newContent = implode("\n", $lines);
                 $newContent = str_replace("'", "\u{2019}", $newContent);
 
