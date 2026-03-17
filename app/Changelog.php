@@ -201,4 +201,38 @@ class Changelog
             }
         }
     }
+
+    public function removeEmptyCategories(): void
+    {
+        $changelogFile = config('app.structure.main');
+        $lines = file($changelogFile, FILE_IGNORE_NEW_LINES);
+        $result = [];
+        $i = 0;
+        $count = count($lines);
+
+        while ($i < $count) {
+            if (preg_match('/^### (Added|Changed|Deprecated|Fixed|Removed|Security)\s*$/', $lines[$i])) {
+                $nextContentIndex = $i + 1;
+
+                while ($nextContentIndex < $count && trim($lines[$nextContentIndex]) === '') {
+                    $nextContentIndex++;
+                }
+
+                if ($nextContentIndex < $count && preg_match('/^##+ /', $lines[$nextContentIndex])) {
+                    $i = $nextContentIndex;
+                    continue;
+                }
+
+                if ($nextContentIndex >= $count) {
+                    $i = $nextContentIndex;
+                    continue;
+                }
+            }
+
+            $result[] = $lines[$i];
+            $i++;
+        }
+
+        file_put_contents($changelogFile, implode("\n", $result) . "\n");
+    }
 }
