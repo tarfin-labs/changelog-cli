@@ -135,7 +135,7 @@ class Changelog
         $week = (int) date('W');
         $date = date('Y-m-d');
 
-        $content = "## [{$year}.{$week}.0] - {$date}\n";
+        $content = "\n## [{$year}.{$week}.0] - {$date}\n";
         $content.= "### Added\n";
         $content.= "### Changed\n";
         $content.= "### Deprecated\n";
