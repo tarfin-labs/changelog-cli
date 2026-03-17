@@ -42,6 +42,10 @@ class PublishChangelogCommand extends Command
             $changelog->publishFileContent($filePath);
         }
 
+        if ($files) {
+            $changelog->removeEmptyCategories();
+        }
+
         $this->info('Changelogs successfully published to unreleased.');
     }
 
