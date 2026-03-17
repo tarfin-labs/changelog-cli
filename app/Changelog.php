@@ -131,7 +131,12 @@ class Changelog
     {
         $line = $this->search('Unreleased', config('app.structure.main'));
 
-        $content = "### Added\n";
+        $year = date('Y');
+        $week = (int) date('W');
+        $date = date('Y-m-d');
+
+        $content = "## [{$year}.{$week}.0] - {$date}\n";
+        $content.= "### Added\n";
         $content.= "### Changed\n";
         $content.= "### Deprecated\n";
         $content.= "### Fixed\n";
