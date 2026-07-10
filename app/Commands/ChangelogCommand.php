@@ -26,22 +26,48 @@ class ChangelogCommand extends Command
      * Execute the console command.
      *
      * @param Changelog $changelog
-     * @return mixed
      */
     public function handle(Changelog $changelog): void
     {
-        $option = $this->menu($changelog->menuName, $changelog->menuItems)
+        $option = $this->openMenu($changelog);
+
+        if (is_null($option)) {
+            $this->components->warn('Changelog cancelled.');
+
+            return;
+        }
+
+        $this->present($changelog, $option);
+    }
+
+    /**
+     * Render output after a category option has been selected.
+     */
+    public function present(Changelog $changelog, int $option): void
+    {
+        $created = $changelog->execute($option);
+
+        if ($created) {
+            $this->notify('Changelog Cli', "#{$changelog->menuItems[$option]} changelog file successfully created.");
+            $this->components->info(sprintf('Changelog [%s] created successfully.', $changelog->filePath()));
+
+            if ($this->output->isVerbose()) {
+                $this->components->twoColumnDetail('Category', $changelog->menuItems[$option]);
+            }
+        } else {
+            $this->components->error('Failed to create changelog file.');
+        }
+    }
+
+    /**
+     * Open interactive category menu and return selected option key.
+     */
+    protected function openMenu(Changelog $changelog): ?int
+    {
+        return $this->menu($changelog->menuName, $changelog->menuItems)
             ->setForegroundColour('green')
             ->setBackgroundColour('black')
             ->open();
-
-        if (is_null($option)) {
-            $this->info('Changelog closed!');
-        } else {
-            $changelog->execute($option);
-            $this->notify("Changelog Cli", "#{$changelog->menuItems[$option]} changelog file successfully created.");
-            $this->info("#{$changelog->menuItems[$option]} changelog file successfully created.");
-        }
     }
 
     /**
