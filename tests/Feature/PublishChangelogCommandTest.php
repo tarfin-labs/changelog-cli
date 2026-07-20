@@ -4,7 +4,6 @@ namespace ChangelogCLI\Tests\Feature;
 
 use ChangelogCLI\Tests\TestCase;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Process;
 
 class PublishChangelogCommandTest extends TestCase
 {
@@ -13,8 +12,6 @@ class PublishChangelogCommandTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        Process::fake();
 
         $this->tempDir = sys_get_temp_dir().'/changelog-cli-publish-'.uniqid();
         File::ensureDirectoryExists($this->tempDir);
