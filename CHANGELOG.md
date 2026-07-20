@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 - `create` and `publish` commands now print created/published file paths using the Laravel `make:*` style output (`components->info` + `twoColumnDetail`).
-- Internal `exec` calls replaced with `Illuminate\Support\Facades\Process` for testability.
+- `git config user.name` and `git symbolic-ref --short HEAD` lookups now use `Illuminate\Support\Facades\Process` instead of `exec` for testability.
 
 ## [0.4.0] - 0.4.0
 
