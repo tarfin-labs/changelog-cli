@@ -25,10 +25,8 @@ class PublishChangelogCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle(Changelog $changelog)
+    public function handle(Changelog $changelog): void
     {
         $unreleasedPath = config('app.structure.unreleased');
 
