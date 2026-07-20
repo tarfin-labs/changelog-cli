@@ -30,9 +30,9 @@ class PublishChangelogCommand extends Command
      */
     public function handle(Changelog $changelog)
     {
-        $files = File::allFiles(config('app.structure.unreleased'));
+        $unreleasedPath = config('app.structure.unreleased');
 
-        if (empty($files)) {
+        if (! File::isDirectory($unreleasedPath) || empty($files = File::allFiles($unreleasedPath))) {
             $this->components->warn('No unreleased changelogs to publish.');
 
             return;
@@ -41,7 +41,7 @@ class PublishChangelogCommand extends Command
         $changelog->appendCategories();
 
         foreach ($files as $file) {
-            $filePath = config('app.structure.unreleased') . DIRECTORY_SEPARATOR . $file->getRelativePathname();
+            $filePath = $unreleasedPath . DIRECTORY_SEPARATOR . $file->getRelativePathname();
 
             $changelog->publishFileContent($filePath);
         }

@@ -57,4 +57,13 @@ class PublishChangelogCommandTest extends TestCase
             ->expectsOutputToContain('No unreleased changelogs to publish.')
             ->assertExitCode(0);
     }
+
+    public function testItWarnsWhenUnreleasedDirectoryIsMissing(): void
+    {
+        File::deleteDirectory(config('app.structure.unreleased'));
+
+        $this->artisan('publish')
+            ->expectsOutputToContain('No unreleased changelogs to publish.')
+            ->assertExitCode(0);
+    }
 }
