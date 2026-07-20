@@ -26,22 +26,55 @@ class ChangelogCommand extends Command
      * Execute the console command.
      *
      * @param Changelog $changelog
-     * @return mixed
+     * @return int
      */
-    public function handle(Changelog $changelog): void
+    public function handle(Changelog $changelog): int
     {
-        $option = $this->menu($changelog->menuName, $changelog->menuItems)
+        $option = $this->openMenu($changelog);
+
+        if (is_null($option)) {
+            $this->components->warn('Changelog cancelled.');
+
+            return self::SUCCESS;
+        }
+
+        return $this->createAndReport($changelog, $option);
+    }
+
+    /**
+     * Create the changelog file and report the outcome.
+     *
+     * @return int
+     */
+    protected function createAndReport(Changelog $changelog, int $option): int
+    {
+        $created = $changelog->execute($option);
+
+        if (! $created) {
+            $this->components->error('Failed to create changelog file.');
+
+            return self::FAILURE;
+        }
+
+        $this->notify('Changelog Cli', "#{$changelog->menuItems[$option]} changelog file successfully created.");
+        $this->components->info(sprintf('Changelog [%s] created successfully.', $changelog->filePath()));
+
+        if ($this->output->isVerbose()) {
+            $this->components->twoColumnDetail('Category', $changelog->menuItems[$option]);
+        }
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * Open interactive category menu and return selected option key.
+     */
+    protected function openMenu(Changelog $changelog): ?int
+    {
+        return $this->menu($changelog->menuName, $changelog->menuItems)
             ->setForegroundColour('green')
             ->setBackgroundColour('black')
             ->open();
-
-        if (is_null($option)) {
-            $this->info('Changelog closed!');
-        } else {
-            $changelog->execute($option);
-            $this->notify("Changelog Cli", "#{$changelog->menuItems[$option]} changelog file successfully created.");
-            $this->info("#{$changelog->menuItems[$option]} changelog file successfully created.");
-        }
     }
 
     /**

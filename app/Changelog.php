@@ -2,6 +2,7 @@
 
 namespace ChangelogCLI;
 
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 
 class Changelog
@@ -38,7 +39,9 @@ class Changelog
      */
     public function gitUsername(): string
     {
-        return exec('git config user.name');
+        $process = Process::run('git config user.name');
+
+        return $process->successful() ? trim($process->output()) : '';
     }
 
     /**
@@ -46,7 +49,9 @@ class Changelog
      */
     public function branchName(): string
     {
-        return exec('git symbolic-ref --short HEAD');
+        $process = Process::run('git symbolic-ref --short HEAD');
+
+        return $process->successful() ? trim($process->output()) : '';
     }
 
     /**

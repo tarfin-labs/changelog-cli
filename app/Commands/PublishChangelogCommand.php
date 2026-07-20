@@ -25,28 +25,34 @@ class PublishChangelogCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle(Changelog $changelog)
+    public function handle(Changelog $changelog): void
     {
-        $files = File::allFiles(config('app.structure.unreleased'));
+        $unreleasedPath = config('app.structure.unreleased');
 
-        if ($files) {
-            $changelog->appendCategories();
+        if (! File::isDirectory($unreleasedPath) || empty($files = File::allFiles($unreleasedPath))) {
+            $this->components->warn('No unreleased changelogs to publish.');
+
+            return;
         }
 
+        $changelog->appendCategories();
+
         foreach ($files as $file) {
-            $filePath = config('app.structure.unreleased') . DIRECTORY_SEPARATOR . $file->getRelativePathname();
+            $filePath = $unreleasedPath . DIRECTORY_SEPARATOR . $file->getRelativePathname();
 
             $changelog->publishFileContent($filePath);
         }
 
-        if ($files) {
-            $changelog->removeEmptyCategories();
+        $changelog->removeEmptyCategories();
+
+        $this->components->info('Changelogs published successfully.');
+
+        foreach ($files as $file) {
+            $this->components->twoColumnDetail('Published', $file->getRelativePathname());
         }
 
-        $this->info('Changelogs successfully published to unreleased.');
+        $this->components->twoColumnDetail('Target', config('app.structure.main'));
     }
 
     /**
