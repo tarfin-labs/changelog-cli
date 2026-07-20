@@ -26,37 +26,44 @@ class ChangelogCommand extends Command
      * Execute the console command.
      *
      * @param Changelog $changelog
+     * @return int
      */
-    public function handle(Changelog $changelog): void
+    public function handle(Changelog $changelog): int
     {
         $option = $this->openMenu($changelog);
 
         if (is_null($option)) {
             $this->components->warn('Changelog cancelled.');
 
-            return;
+            return self::SUCCESS;
         }
 
-        $this->present($changelog, $option);
+        return $this->present($changelog, $option);
     }
 
     /**
      * Render output after a category option has been selected.
+     *
+     * @return int
      */
-    public function present(Changelog $changelog, int $option): void
+    public function present(Changelog $changelog, int $option): int
     {
         $created = $changelog->execute($option);
 
-        if ($created) {
-            $this->notify('Changelog Cli', "#{$changelog->menuItems[$option]} changelog file successfully created.");
-            $this->components->info(sprintf('Changelog [%s] created successfully.', $changelog->filePath()));
-
-            if ($this->output->isVerbose()) {
-                $this->components->twoColumnDetail('Category', $changelog->menuItems[$option]);
-            }
-        } else {
+        if (! $created) {
             $this->components->error('Failed to create changelog file.');
+
+            return self::FAILURE;
         }
+
+        $this->notify('Changelog Cli', "#{$changelog->menuItems[$option]} changelog file successfully created.");
+        $this->components->info(sprintf('Changelog [%s] created successfully.', $changelog->filePath()));
+
+        if ($this->output->isVerbose()) {
+            $this->components->twoColumnDetail('Category', $changelog->menuItems[$option]);
+        }
+
+        return self::SUCCESS;
     }
 
     /**

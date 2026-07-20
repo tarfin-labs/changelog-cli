@@ -33,7 +33,7 @@ class ChangelogCommandTest extends TestCase
     public function testItPrintsCreatedFilePathInMakeStyleOutput(): void
     {
         [$command, $buffer] = $this->makeCommand();
-        $command->present($this->app->make(Changelog::class), 0);
+        $exitCode = $command->present($this->app->make(Changelog::class), 0);
 
         $output = $buffer->fetch();
 
@@ -42,12 +42,13 @@ class ChangelogCommandTest extends TestCase
             $output
         );
         $this->assertStringNotContainsString('Category', $output);
+        $this->assertSame(0, $exitCode);
     }
 
     public function testItPrintsAdditionalDetailsInVerboseMode(): void
     {
         [$command, $buffer] = $this->makeCommand(OutputInterface::VERBOSITY_VERBOSE);
-        $command->present($this->app->make(Changelog::class), 0);
+        $exitCode = $command->present($this->app->make(Changelog::class), 0);
 
         $output = $buffer->fetch();
 
@@ -57,6 +58,7 @@ class ChangelogCommandTest extends TestCase
         );
         $this->assertStringContainsString('Category', $output);
         $this->assertStringContainsString('New feature', $output);
+        $this->assertSame(0, $exitCode);
     }
 
     public function testItPersistsTheChangelogFileWithSelectedCategory(): void
@@ -70,17 +72,18 @@ class ChangelogCommandTest extends TestCase
         $this->assertStringContainsString('### Fixed', $content);
     }
 
-    public function testItPrintsErrorWhenFileWriteFails(): void
+    public function testItPrintsErrorAndReturnsFailureWhenFileWriteFails(): void
     {
         Storage::shouldReceive('exists')->andReturn(true);
         Storage::shouldReceive('put')->andReturn(false);
 
         [$command, $buffer] = $this->makeCommand();
-        $command->present($this->app->make(Changelog::class), 0);
+        $exitCode = $command->present($this->app->make(Changelog::class), 0);
 
         $output = $buffer->fetch();
 
         $this->assertStringContainsString('Failed to create changelog file.', $output);
+        $this->assertSame(1, $exitCode);
     }
 
     /**
