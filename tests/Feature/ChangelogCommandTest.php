@@ -123,9 +123,7 @@ class ChangelogCommandTest extends TestCase
         $command->setOutput($style);
         $command->setLaravel($this->app);
 
-        $components = new Factory($style);
-        $reflection = new \ReflectionProperty(Command::class, 'components');
-        $reflection->setValue($command, $components);
+        $this->attachComponentsFactory($command, $style);
 
         return [$command, $buffer];
     }
@@ -152,10 +150,26 @@ class ChangelogCommandTest extends TestCase
         $style = new OutputStyle(new ArrayInput([]), $buffer);
         $style->setVerbosity(OutputInterface::VERBOSITY_NORMAL);
 
-        $components = new Factory($style);
-        $reflection = new \ReflectionProperty(Command::class, 'components');
-        $reflection->setValue($this->app->make(ChangelogCommand::class), $components);
+        $this->attachComponentsFactory($this->app->make(ChangelogCommand::class), $style);
 
         return $buffer;
+    }
+
+    /**
+     * Attach a Components Factory to a command via reflection.
+     *
+     * Laravel's console command normally builds its $components instance
+     * inside Command::execute(). Tests call the command directly, bypassing
+     * execute(), so the factory never gets initialised and every
+     * $this->components->... call would fail with a null reference. Reflection
+     * is a pragmatic workaround to keep the public surface of ChangelogCommand
+     * untouched. If Laravel ever renames the property or relocates the wiring,
+     * this is the only line that needs updating.
+     */
+    private function attachComponentsFactory(ChangelogCommand $command, OutputStyle $style): void
+    {
+        $components = new Factory($style);
+        $reflection = new \ReflectionProperty(Command::class, 'components');
+        $reflection->setValue($command, $components);
     }
 }
