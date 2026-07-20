@@ -33,7 +33,7 @@ class ChangelogCommandTest extends TestCase
     public function testItPrintsCreatedFilePathInMakeStyleOutput(): void
     {
         [$command, $buffer] = $this->makeCommand();
-        $exitCode = $command->present($this->app->make(Changelog::class), 0);
+        $exitCode = $this->invokeCreateAndReport($command, 0);
 
         $output = $buffer->fetch();
 
@@ -48,7 +48,7 @@ class ChangelogCommandTest extends TestCase
     public function testItPrintsAdditionalDetailsInVerboseMode(): void
     {
         [$command, $buffer] = $this->makeCommand(OutputInterface::VERBOSITY_VERBOSE);
-        $exitCode = $command->present($this->app->make(Changelog::class), 0);
+        $exitCode = $this->invokeCreateAndReport($command, 0);
 
         $output = $buffer->fetch();
 
@@ -64,7 +64,7 @@ class ChangelogCommandTest extends TestCase
     public function testItPersistsTheChangelogFileWithSelectedCategory(): void
     {
         [$command] = $this->makeCommand();
-        $command->present($this->app->make(Changelog::class), 1);
+        $this->invokeCreateAndReport($command, 1);
 
         Storage::assertExists('changelogs/unreleased/'.self::BRANCH.'.md');
 
@@ -78,12 +78,36 @@ class ChangelogCommandTest extends TestCase
         Storage::shouldReceive('put')->andReturn(false);
 
         [$command, $buffer] = $this->makeCommand();
-        $exitCode = $command->present($this->app->make(Changelog::class), 0);
+        $exitCode = $this->invokeCreateAndReport($command, 0);
 
         $output = $buffer->fetch();
 
         $this->assertStringContainsString('Failed to create changelog file.', $output);
         $this->assertSame(1, $exitCode);
+    }
+
+    public function testItRunsFullHandleFlowAndReportsCreatedFile(): void
+    {
+        $command = $this->makeControllableCommand(option: 0);
+
+        $exitCode = $command->run(new ArrayInput([]), $this->makeOutput());
+
+        $this->assertSame(0, $exitCode);
+        Storage::assertExists('changelogs/unreleased/'.self::BRANCH.'.md');
+    }
+
+    public function testItReportsCancellationAndReturnsSuccessWhenMenuIsClosed(): void
+    {
+        $command = $this->makeControllableCommand(option: null);
+
+        $buffer = new BufferedOutput();
+        $style = new OutputStyle(new ArrayInput([]), $buffer);
+
+        $exitCode = $command->run(new ArrayInput([]), $style);
+
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('Changelog cancelled.', $buffer->fetch());
+        Storage::assertDirectoryEmpty('changelogs/unreleased');
     }
 
     /**
@@ -104,5 +128,34 @@ class ChangelogCommandTest extends TestCase
         $reflection->setValue($command, $components);
 
         return [$command, $buffer];
+    }
+
+    private function invokeCreateAndReport(ChangelogCommand $command, int $option): int
+    {
+        $reflection = new \ReflectionMethod(ChangelogCommand::class, 'createAndReport');
+        $reflection->setAccessible(true);
+
+        return $reflection->invoke($command, $this->app->make(Changelog::class), $option);
+    }
+
+    private function makeControllableCommand(?int $option): ControllableChangelogCommand
+    {
+        $command = new ControllableChangelogCommand($option);
+        $command->setLaravel($this->app);
+
+        return $command;
+    }
+
+    private function makeOutput(): BufferedOutput
+    {
+        $buffer = new BufferedOutput();
+        $style = new OutputStyle(new ArrayInput([]), $buffer);
+        $style->setVerbosity(OutputInterface::VERBOSITY_NORMAL);
+
+        $components = new Factory($style);
+        $reflection = new \ReflectionProperty(Command::class, 'components');
+        $reflection->setValue($this->app->make(ChangelogCommand::class), $components);
+
+        return $buffer;
     }
 }

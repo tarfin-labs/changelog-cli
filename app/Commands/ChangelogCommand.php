@@ -38,15 +38,15 @@ class ChangelogCommand extends Command
             return self::SUCCESS;
         }
 
-        return $this->present($changelog, $option);
+        return $this->createAndReport($changelog, $option);
     }
 
     /**
-     * Render output after a category option has been selected.
+     * Create the changelog file and report the outcome.
      *
      * @return int
      */
-    public function present(Changelog $changelog, int $option): int
+    protected function createAndReport(Changelog $changelog, int $option): int
     {
         $created = $changelog->execute($option);
 
