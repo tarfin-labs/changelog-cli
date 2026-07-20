@@ -1,6 +1,5 @@
 {
     "main": "changelog-cli",
-    "output": "builds/changelog-cli",
     "chmod": "0755",
     "directories": [
         "app",
